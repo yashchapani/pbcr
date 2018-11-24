@@ -28,6 +28,11 @@ public class SingleVsMulti {
         String prevHash = a.hash.toHex();
 
         Random objGenerator = new Random();
+        String[] name = {"Aashish","Ayushman", "Yash", "Aditya", "Manasi", "Mansi", "Jyot", "Preetpal", "Manmeet", "Deepti"};
+        String[] address1 = {"Civil Lines", "Alkapuri", "Marine drive", "Bandra", "Howra", "Lawrence road", "Ellorapark", "Teliargunj", "Malad", "Goregaon"};
+        String[] address2 = {"Allahabad", "Amritsar", "Vadodara", "Mumbai", "Kolkata", "Bhopal", "Panji", "Patna", "Gangtok", "Gauwahati"};
+        String[] address3 = {"UP", "Punjab", "Gujarat", "Maharastra", "West-Bengal", "MP", "Goa", "Bihar", "Sikkim", "Assam"};
+
         for(int i = 0; i < 1500; i++) {
             ArrayList<Transaction> transactions = new ArrayList<>();
             for (int j = 0; j < 200; j++) {
@@ -36,9 +41,14 @@ public class SingleVsMulti {
                 if(i % 300 == 0 && j == 127){
                     ran = 342904;
                 }
-                Identity buyer = new Identity(ran + "", ran + "");
-                Identity seller = new Identity(ran + "", ran + "");
-                LandDescription landDescription = new LandDescription(ran, ran, ran + "");
+                int ran1 = objGenerator.nextInt(10);
+                int ran2 = objGenerator.nextInt(10);
+                int ran3 = objGenerator.nextInt(10);
+                int ran4 = objGenerator.nextInt(10);
+
+                Identity buyer = new Identity(ran + "", ran + "", name[ran1]);
+                Identity seller = new Identity(ran + "", ran + "", name[ran2]);
+                LandDescription landDescription = new LandDescription(ran, ran, address1[ran3] + ", " + address2[ran4] +  ", " + address3[ran4]);
                 String pdfLink = "tr.pdf";
                 if(i % 100 == 0 && j == 0){
                     System.out.println(ran);
@@ -63,13 +73,13 @@ public class SingleVsMulti {
         return prevHash;
     }
 
-    public static ArrayList<Result> findTransactionDetails(int numberOfThreads, String panDetail, String prevHash){
+    public static ArrayList<Result> findTransactionDetails(int numberOfThreads, String search, String detail, String prevHash){
         IPFS ipfs = new IPFS("/ip4/127.0.0.1/tcp/5001");
 
         BlockChainReader blockChainReader = new IPFSBlockChainReader(prevHash, ipfs);
         BlockchainQuery blockchainQuery = new MultiThreadedQuery(numberOfThreads, 10000);
         long startTime = System.nanoTime();
-        ArrayList<Result> result = blockchainQuery.panCount(blockChainReader, panDetail);
+        ArrayList<Result> result = blockchainQuery.count(blockChainReader, search, detail);
         long endTime = System.nanoTime();
         System.out.println("" + (endTime - startTime));
 

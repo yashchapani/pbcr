@@ -1,21 +1,23 @@
 package pbcr;
 import java.util.ArrayList;
 
-class PanCountTask implements Runnable {
+class CountTask implements Runnable {
 
     private Thread t;
     private int localCounter = 0;
-    private String panDetails;
+    private String details;
     private State state;
+    private String search;
     private int transactionsPerThread;
     private ArrayList<Transaction> transactions;
     private ArrayList<Result> resultId = new ArrayList<>();
 
-    public PanCountTask(State state, String panDetails, int transactionsPerThread, ArrayList<Transaction> transactions){
+    public CountTask(State state, String search, String details, int transactionsPerThread, ArrayList<Transaction> transactions){
         this.transactions = transactions;
         this.state = state;
-        this.panDetails = panDetails;
+        this.details = details;
         this.transactionsPerThread = transactionsPerThread;
+        this.search = search;
         t = new Thread(this);
         t.start();
     }
@@ -34,13 +36,45 @@ class PanCountTask implements Runnable {
                 return;
             for (int i = entry * transactionsPerThread; i < entry * transactionsPerThread+ transactionsPerThread
                     && i < transactions.size(); i++) {
-                    if (transactions.get(i).getBuyerId().getPanDetails().equals(panDetails)
-                            || transactions.get(i).getSellerId().getPanDetails().equals(panDetails)){
-                        localCounter++;
-                        Result res = new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink());
-//                        System.out.println(res.getPdfLink());
-                                
-                        resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
+                    if("pan".equals(search)){
+                        if (transactions.get(i).getBuyerId().getPanDetails().equals(details)
+                                || transactions.get(i).getSellerId().getPanDetails().equals(details)){
+                            localCounter++;
+
+                            resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
+                        }
+                    }
+                    else if("name".equals(search)){
+                        if (transactions.get(i).getBuyerId().getName().equals(details)
+                                || transactions.get(i).getSellerId().getName().equals(details)){
+                            localCounter++;
+
+                            resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
+                        }
+                    }
+                    else if("aadhaar".equals(search)){
+                        if (transactions.get(i).getBuyerId().getAadharNo().equals(details)
+                                || transactions.get(i).getSellerId().getAadharNo().equals(details)){
+                            localCounter++;
+
+                            resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
+                        }
+                    }
+                    else if("address".equals(search)){
+                        String address = transactions.get(i).getLandDescription().getAddress();
+                        String[] addresses = details.split(" ",0);
+                        int cnt = 0;
+                        for(int j = 0; j < addresses.length; j++){
+                            if(address.toUpperCase().contains(addresses[j].toUpperCase())){
+                                cnt++;
+                            }
+                            
+                        }
+                        if(cnt == addresses.length){
+                            localCounter++;
+
+                            resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
+                        }
                     }
                 }
             }
@@ -137,14 +171,14 @@ public class MultiThreadedQuery implements BlockchainQuery {
         this.state = new State();
     }
 
-    public ArrayList<Result> panCount(BlockChainReader blockChainReader, String panDetails) {
+    public ArrayList<Result> count(BlockChainReader blockChainReader, String search, String details) {
 
         state.resetNextBlock();
 
-        PanCountTask[] panCountTasks = new PanCountTask[threadCount];
+        CountTask[] panCountTasks = new CountTask[threadCount];
 
         for(int tid = 0; tid < threadCount; tid++) {
-            panCountTasks[tid] = new PanCountTask(state, panDetails, transactionsPerThread, transactions);
+            panCountTasks[tid] = new CountTask(state, search, details, transactionsPerThread, transactions);
         }
 
         TransactionProducer transactionProducer = new TransactionProducer(transactionsPerThread, transactions,

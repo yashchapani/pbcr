@@ -1,7 +1,7 @@
 package pbcr;
 import java.io.Serializable;
 
-public class Result implements Serializable {
+public class Result implements Serializable, Comparable {
     private long transactionId;
     private String pdfLink;
     
@@ -24,6 +24,15 @@ public class Result implements Serializable {
     
     public void setPdfLink(String pdfLink){
         this.pdfLink = pdfLink;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Result resComp = (Result) o;
+        long res = resComp.getTransactionId() - this.getTransactionId();
+        if(res == 0)
+            return 0;
+        return (int)(res/Math.abs(res));
     }
     
 }

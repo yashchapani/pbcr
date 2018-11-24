@@ -4,10 +4,20 @@ import java.io.Serializable;
 public class Identity implements Serializable {
     private String panDetails;
     private String aadharNo;
+    private String name;
 
-    public Identity(String panDetails, String aadharNo) {
+    public Identity(String panDetails, String aadharNo, String name) {
         this.panDetails = panDetails;
         this.aadharNo = aadharNo;
+        this.name = name;
+    }
+    
+     public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getPanDetails() {
