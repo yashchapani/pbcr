@@ -37,24 +37,24 @@ class CountTask implements Runnable {
             for (int i = entry * transactionsPerThread; i < entry * transactionsPerThread+ transactionsPerThread
                     && i < transactions.size(); i++) {
                     if("pan".equals(search)){
-                        if (transactions.get(i).getBuyerId().getPanDetails().equals(details)
-                                || transactions.get(i).getSellerId().getPanDetails().equals(details)){
+                        if (transactions.get(i).getBuyerId().getPanDetails().toUpperCase().equals(details.toUpperCase())
+                                || transactions.get(i).getSellerId().getPanDetails().toUpperCase().equals(details.toUpperCase())){
                             localCounter++;
 
                             resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
                         }
                     }
                     else if("name".equals(search)){
-                        if (transactions.get(i).getBuyerId().getName().equals(details)
-                                || transactions.get(i).getSellerId().getName().equals(details)){
+                        if (transactions.get(i).getBuyerId().getName().toUpperCase().equals(details.toUpperCase())
+                                || transactions.get(i).getSellerId().getName().toUpperCase().equals(details.toUpperCase())){
                             localCounter++;
 
                             resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
                         }
                     }
                     else if("aadhaar".equals(search)){
-                        if (transactions.get(i).getBuyerId().getAadharNo().equals(details)
-                                || transactions.get(i).getSellerId().getAadharNo().equals(details)){
+                        if (transactions.get(i).getBuyerId().getAadharNo().toUpperCase().equals(details.toUpperCase())
+                                || transactions.get(i).getSellerId().getAadharNo().toUpperCase().equals(details.toUpperCase())){
                             localCounter++;
 
                             resultId.add(new Result(transactions.get(i).getTrasactionId(), transactions.get(i).getPdfLink()));
