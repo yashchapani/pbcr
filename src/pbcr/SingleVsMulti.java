@@ -57,7 +57,7 @@ public class SingleVsMulti {
                 transactions.add(transaction);
             }
             String timestamp = (new Date()).toString();
-            Block t = new Block(0, timestamp, transactions, null, prevHash);
+            Block t = new Block(i, timestamp, transactions, null, prevHash);
             blockInJson = gson.toJson(t);
             file = new NamedStreamable.ByteArrayWrapper(blockInJson.getBytes());
             MerkleNode merkleNode = null;

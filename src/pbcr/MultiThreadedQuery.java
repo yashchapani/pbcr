@@ -136,7 +136,19 @@ class State {
     private int availableBlocks = 0;
     private int nextBlock = 0;
     private boolean finished = false;
-
+    private static State state = null;
+    
+    private State(){}
+    
+    public static State getInstance(){
+        if(state == null){
+            state = new State();
+            return state;
+        }
+        else
+            return state;
+    }
+    
     public void incrementAvailabeBlocks(){
         availableBlocks ++;
     }
@@ -168,7 +180,7 @@ public class MultiThreadedQuery implements BlockchainQuery {
     public MultiThreadedQuery(int threadCount, int transactionsPerThread) {
         this.transactionsPerThread = transactionsPerThread;
         this.threadCount = threadCount;
-        this.state = new State();
+        this.state = State.getInstance();
     }
 
     public ArrayList<Result> count(BlockChainReader blockChainReader, String search, String details) {
