@@ -30,9 +30,7 @@ public class Result implements Serializable, Comparable {
     public int compareTo(Object o) {
         Result resComp = (Result) o;
         long res = resComp.getTransactionId() - this.getTransactionId();
-        if(res == 0)
-            return 0;
-        return (int)(res/Math.abs(res));
+        return (res==0)?0:(int)(res/Math.abs(res));
     }
     
 }
