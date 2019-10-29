@@ -16,6 +16,8 @@ public class SimpleBlockChainReader implements BlockChainReader{
             transactions = block.getTransactions();
             curTransaction = 0;
             curBlock = 0;
+            oi.close();
+            fi.close();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -33,6 +35,8 @@ public class SimpleBlockChainReader implements BlockChainReader{
                 Block block = (Block) oi.readObject();
                 transactions = block.getTransactions();
                 curTransaction = 0;
+                oi.close();
+                fi.close();
                 return transactions.get(curTransaction++);
             }
             catch (Exception e){
